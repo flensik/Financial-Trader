@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Financial Trader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+      /* Global Reset & Font */
+      :root {
+        --font-main: 'Inter', sans-serif;
+      }
+      body {
+        font-family: var(--font-main);
+        overscroll-behavior-y: none;
+        -webkit-tap-highlight-color: transparent;
+        /* Default light bg, handled by Tailwind classes mostly now */
+        background-color: #f8fafc; 
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Dark Mode Global Overrides */
+      .dark body {
+        background-color: #0f172a;
+        color: #f1f5f9;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0px); }
+      }
+      
+      @keyframes pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.95); }
+        100% { transform: scale(1); }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      
+      .animate-float {
+        animation: float 5s ease-in-out infinite;
+      }
+
+      /* Glassmorphism Classes */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+      }
+      
+      .dark .glass-panel {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
+      }
+      
+      .dark .glass-nav {
+        background: rgba(30, 41, 59, 0.85);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+      }
+      
+      .glass-card-dark {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        color: white;
+      }
+
+      /* 3D Button Effect */
+      .btn-3d {
+        transition: all 0.1s;
+        box-shadow: 0px 10px 0px 0px rgba(0,0,0,0.1), 
+                    0px 10px 20px rgba(0,0,0,0.2);
+        transform: translateY(0);
+      }
+      .btn-3d:active {
+        transform: translateY(10px);
+        box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.1),
+                    inset 0px 5px 10px rgba(0,0,0,0.2);
+      }
+
+      /* Snowflakes - Updated to Overlay */
+      .snowflake {
+        position: fixed;
+        top: -10%;
+        z-index: 9999; /* On top of everything */
+        color: #fff;
+        font-size: 1.2em;
+        text-shadow: 0 0 5px rgba(255,255,255,0.8);
+        user-select: none;
+        pointer-events: none; /* Click through */
+        animation-name: fall, shake;
+        animation-duration: 10s, 3s;
+        animation-timing-function: linear, ease-in-out;
+        animation-iteration-count: infinite, infinite;
+        opacity: 0.8;
+      }
+
+      @keyframes fall {
+        0% { top: -10%; }
+        100% { top: 110%; }
+      }
+      @keyframes shake {
+        0% { transform: translateX(0px); }
+        50% { transform: translateX(40px); }
+        100% { transform: translateX(0px); }
+      }
+
+      /* Christmas Garland CSS */
+      .garland-container {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 8px;
+        pointer-events: none;
+      }
+      .bulb {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        position: relative;
+        animation: glow 1.5s infinite alternate;
+      }
+      .bulb::before {
+        content: '';
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background: #333;
+        border-radius: 2px;
+      }
+      .bulb.red { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; animation-delay: 0s; }
+      .bulb.gold { background-color: #fbbf24; box-shadow: 0 0 10px #fbbf24; animation-delay: 0.3s; }
+      .bulb.green { background-color: #22c55e; box-shadow: 0 0 10px #22c55e; animation-delay: 0.6s; }
+      .bulb.blue { background-color: #3b82f6; box-shadow: 0 0 10px #3b82f6; animation-delay: 0.9s; }
+
+      @keyframes glow {
+        0% { opacity: 0.4; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 15px currentColor; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-50 text-slate-900 overflow-hidden relative selection:bg-teal-200 selection:text-teal-900">
+    <!-- React Root -->
+    <div id="root" class="h-[100dvh] w-full flex flex-col relative z-10"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

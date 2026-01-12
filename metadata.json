@@ -1,0 +1,5 @@
+{
+  "name": "Financial Trader",
+  "description": "A feature-rich business clicker game with investment simulation, business management, and a full JSON-based admin panel with banning capabilities.",
+  "requestFramePermissions": []
+}
